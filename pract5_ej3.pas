@@ -22,7 +22,7 @@ end;
 
 procedure leerCompra(var c:compra);
 begin
-	c.codCliente:= Random(200);
+	c.codCliente:= Random(2000);
 	if c.codCliente <> 0 then
 	begin
 		c.mes:= Random(12) + 1;
@@ -49,6 +49,7 @@ begin
 		nue^.hd:= nil;
 		nue^.hi:= nil;
 		nue^.l:=nil;
+		nue^.codGame:= d.codGame;
 		cargarLista(nue^.l,d);
 		a:=nue;
 	end
@@ -76,10 +77,13 @@ function cantClientesMes(l:lista; mes:integer):integer;
 begin
 	if l = nil then
 		cantClientesMes:= 0
-	else if l^.mes = mes then
-		cantClientesMes:= cantClientesMes(l^.sig, mes) + 1
-	else
-		cantClientesMes:= cantClientesMes(l^.sig, mes);
+	else 
+	begin
+		if l^.mes = mes then
+			cantClientesMes:= cantClientesMes(l^.sig, mes) + 1
+		else
+			cantClientesMes:= cantClientesMes(l^.sig, mes);
+	end;
 end;
 
 procedure generarArbol(var a:arbol);
@@ -96,7 +100,12 @@ begin
 	a:=nil;
 	Randomize;
 	generarArbol(a);
-	l:= retornarLista(a,Random(200) + 100);
-	cantCliente:= cantClientesMes(l,Random(12)+1);
-	writeln('Cant en mes: ', cantCliente);
+	if a <> nil then begin
+    writeln('Codigo en la raiz: ', a^.codGame);
+    l := retornarLista(a, a^.codGame);  // siempre existe
+    cantCliente := cantClientesMes(l, Random(12) + 1);
+    writeln('Cant en mes: ', cantCliente);
+end;
+
+
 end.
