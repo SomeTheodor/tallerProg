@@ -117,3 +117,4 @@ begin
 	cantChasis:= cantChasiEntre(v[d],n1,n2);
 	writeln('Chasi 1: ', n1, 'chasi 2: ', n2, 'Dia: ', d, 'Cant: ', cantChasis);
 end.
+
