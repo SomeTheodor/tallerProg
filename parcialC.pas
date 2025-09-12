@@ -90,16 +90,6 @@ procedure retornarMinMax(l:lista; var minPeso, maxPeso:real; var minCod, maxCod:
 begin
 	if l <> nil then
 	begin
-
-		if minCod = -1 then
-		begin
-			minCod:= l^.d.codCliente;
-			maxCod:= l^.d.codCliente;
-			minPeso:= l^.d.peso;
-			maxPeso:= l^.d.peso;
-		end
-		else 
-		begin
 			if l^.d.peso < minPeso then
 			begin
 				minCod:= l^.d.codCliente;
@@ -110,7 +100,6 @@ begin
 				maxCod:= l^.d.codCliente;
 				maxPeso:= l^.d.peso;
 			end;
-		end;
 		retornarMinMax(l^.sig,minPeso,maxPeso,minCod,maxCod);
 	end;
 end;
@@ -133,6 +122,10 @@ begin
 	else 
 	begin
 		writeln('Lista con datos');
+		imprimirLista(listaEnv);
 		retornarMinMax(listaEnv,minPeso,maxPeso,minCod,maxCod);
+		writeln('Cod min: ',minCod, 'Peso: ', minPeso:0:2);
+		writeln('Cod Max: ', maxCod, 'Peso: ', maxPeso:0:2);
 	end;
 end.
+
