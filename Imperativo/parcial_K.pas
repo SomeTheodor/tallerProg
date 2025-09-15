@@ -1,112 +1,141 @@
 program parcialK;
-type
 
-sub_genero = 1..15;
+type subGenero =  1..15;
+
 libro = record
+	isbn,cod,gen:integer;
+end;
+
+lista = ^nodo;
+nodo = record
 	isbn:integer;
-	edicion:integer;
-	codAutor:integer;
-	codGenero:sub_genero;
-end;
-
-libroLista = record
-	isbn:integer;
-	edicion:integer;
-	codGenero:sub_genero;
-end;
-
-lNueva = record
-	cod:integer;
-	cant:integer;
-end;
-
-nueLista = ^nueNodo;
-nueNodo = record
-	d:lNueva;
-	sig: nueLista;
+	gen:integer;
+	sig:lista;
 end;
 
 arbol = ^hoja;
-lista = ^nodo;
-nodo = record
-	d:libroLista;
-	sig:lista;
-end;
 hoja = record
-	cod:integer;
-	l: lista;
 	hd:arbol;
 	hi:arbol;
+	cod:integer;
+	l:lista;
+end;
+
+lista2 = ^nodo2;
+nodo2 = record
+	cod:integer;
+	cant:integer;
+	sig:lista2;
 end;
 
 procedure leerLibro(var l:libro);
 begin
-	readln(l.isbn);
-	if(l.isbn <> 0) then
+	l.isbn:= random(200);
+	if l.isbn <> 0 then
 	begin
-		l.edicion:= Random(2025) + 1900;
-		l.codAutor:= Random(20000) + 1;
-		l.codGenero:= Random(15) + 1
-	end
-end;
+		l.cod:= Random(200)+1;
+		l.gen:= Random(200)+1;
+	end;
+end;	
 
 procedure cargarLista(var l:lista; d:libro);
-var nue, ant, act:lista;
+var nue:lista;
 begin
 	new(nue);
-	nue^.d.codGenero:= d.codGenero;
-	nue^.d.edicion:= d.edicion;
-	nue^.d.isbn:= d.isbn;
-	nue^.sig:= nil;
-	l:=nue;
+	nue^.gen:= d.gen;
+	nue^.isbn:= d.isbn;
+	nue^.sig:= l;
+	l:= nue;
 end;
 
 procedure cargarArbol(var a:arbol; d:libro);
 var nue:arbol;
 begin
-	if (a = nil) then
+	if a = nil then
+	begin
 		new(nue);
 		nue^.cod:= d.cod;
-		cargarLista(nue^.l,d);
 		nue^.hd:= nil;
 		nue^.hi:= nil;
-		a:= nue;
-	else if (d.cod = a^.cod)then
-		cargarLista(a^.l,d);
-	else if (d.cod < a^.cod)then
-		cargarArbol(a^.hi,d);
+		nue^.l:= nil;
+		cargarLista(nue^.l,d);
+	end
+	else if a^.cod = d.cod then
+		cargarLista(a^.l,d)
+	else if d.cod < a^.cod then
+		cargarArbol(a^.hi,d)
 	else
 		cargarArbol(a^.hd,d);
 end;
 
-function contarLibros(l:nueLista):integer;
+procedure cargarEstructura(var a:arbol);
+var d:libro;
 begin
-	while(l <> nil)do
-		cant:= cant + 1
-		l:= l^.sig;
-	contarLibros:= cant;
-end;
-
-procedure cargarListaLibros(var l:nueLista; cod:integer;);
-var cod, cant:integer;
-begin
-	if(l = nil)then
-		l^.cod:= cod;
-		l^.cant:= 0;
-	else
+	leerLibro(d);
+	while d.isbn <> 0 do
 	begin
-		if (l^.cod = cod) then
-			l^.cant:= contarLibros(l) + l^.cant;
-		else
-			cargarListaLibros(l^.sig, cod);
+		cargarArbol(a,d);
+		leerLibro(d);
 	end;
 end;
 
-procedure incisoB(var l:nueLista; a:arbol; dni:integer);
+procedure cargarLista2(var l:lista2; cod:integer; l2:lista);
+var nue:lista2;
 begin
-	if (a = nil);
-		
+	if l2 <> nil then
+	begin
+		new(nue);
+		while l2 <> nil do
+		begin
+			nue^.cant:= nue^.cant + 1;
+			l2:=l2^.sig;
+		end;
+		nue^.cod:= cod;
+		nue^.sig:= l;
+		l:= nue;
+	end;
 end;
 
-procedure 
+procedure retornarLista(a:arbol; cod:integer; var l:lista2);
+begin
+	if a <> nil then
+	begin
+		if a^.cod > cod then
+		begin
+			cargarLista2(l, cod, a^.l);
+			retornarLista(a^.hd,cod,l);
+			retornarLista(a^.hi,cod,l);
+		end
+		else
+			retornarLista(a^.hd,cod,l);
+	end;
+end;
+
+procedure retornarMayorCodCant(var cod,cant:integer;l:lista2);
+begin
+	if l <> nil then
+	begin
+		if l^.cant > cant then
+		begin
+			cod:= l^.cod;
+			cant:= l^.cant;
+		end;
+		retornarMayorCodCant(cod,cant,l^.sig);
+	end;
+end;
+
+
+var cant,cod,cod2:integer;
+l:lista2;
+a:arbol;
+begin
+	a:=nil;
+	l:=nil;
+	cod:= Random(200)+1;
+	cod2:= -1;
+	cant:=-1;
+	cargarEstructura(a);
+	retornarLista(a,cod,l);
+	retornarMayorCodCant(cod2,cant,l);
 end.
+
