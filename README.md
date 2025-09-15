@@ -1,6 +1,6 @@
 # 📝 Resolución de Parciales
 
-Este repositorio contiene las **resoluciones de parciales** correspondientes a distintos módulos de la carrera de **Licenciatura en Sistemas**.
+Este repositorio contiene las **resoluciones de parciales** correspondientes a distintos módulos de la carrera.
 
 ---
 
