@@ -4,36 +4,57 @@ package parcialk;
  *
  * @author Alumno
  */
-public class ProgramadorLider extends Programador{
-    private int antiguedad;
-    private int cantProyectos;
+public class Empresa {
+    private ProgramadorLider lider;
+    private int dimF;
+    private int dimL =0;
+    private Programador [] programadores;
 
-    public ProgramadorLider(int antiguedad, int cantProyectos, String nombre, int dni, double sueldo, int cantLineas, String lenguaje) {
-        super(nombre, dni, sueldo, cantLineas, lenguaje);
-        this.antiguedad = antiguedad;
-        this.cantProyectos = cantProyectos;
+    public Empresa(ProgramadorLider lider, int dimF) {
+        this.lider = lider;
+        this.dimF = dimF;
+        this.programadores = new Programador[dimF];
+        for(int i=0; i<dimF; i++){
+            this.programadores[i] = null;
+        }
     }
     
+    public void agregarProgramador(Programador programador){
+        this.programadores[dimL] = programador;
+        this.dimL++;
+    }
+    
+    public void aumentarSueldos(double m){
+        this.lider.subirSueldo(m);
+        for(int i=0;i<dimL;i++){
+            this.programadores[i].subirSueldo(m);
+        }
+    }
+    
+    public ProgramadorLider getLider() {
+        return lider;
+    }
+
+    public void setLider(ProgramadorLider lider) {
+        this.lider = lider;
+    }
+
+    public Programador[] getProgramadores() {
+        return programadores;
+    }
+
+    public void setProgramadores(Programador[] programadores) {
+        this.programadores = programadores;
+    }
+
     @Override
-    public double sueldoFinal(){
-        return super.sueldoFinal() + this.antiguedad*10000 + this.cantProyectos*20000;
+    public String toString() {
+        return "Empresa{" + "lider=" + lider + ", dimF=" + dimF + ", dimL=" + dimL + ", programadores=" + programadores + '}';
     }
     
     
-    public int getAntiguedad() {
-        return antiguedad;
-    }
+}
 
-    public void setAntiguedad(int antiguedad) {
-        this.antiguedad = antiguedad;
-    }
-
-    public int getCantProyectos() {
-        return cantProyectos;
-    }
-
-    public void setCantProyectos(int cantProyectos) {
-        this.cantProyectos = cantProyectos;
     }
     
 }
