@@ -1,8 +1,12 @@
-package parcialk;
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.mycompany.parciales.ParcialK;
 
 /**
  *
- * @author Alumno
+ * @author theol
  */
 public class Programador {
     private String nombre;
@@ -73,7 +77,7 @@ public class Programador {
 
     @Override
     public String toString() {
-        return "nombre=" + nombre + ", dni=" + dni + ", lenguaje=" + lenguaje + sueldoFinal() +'}';
+        return  "Programador: " + (nombre + ", " + dni + ", " + lenguaje + ", "+  sueldoFinal());
     }
     
     
