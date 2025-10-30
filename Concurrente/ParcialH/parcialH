@@ -1,0 +1,125 @@
+programa parcialH
+procesos
+  proceso enviarMensajes
+  variables
+    num:numero
+  comenzar
+    EnviarMensaje(1,r1)
+    Random(num,1,6)
+    EnviarMensaje(num,r1)
+    EnviarMensaje(2,r2)
+    Random(num,1,6)
+    EnviarMensaje(num,r2)
+    EnviarMensaje(3,r3)
+    Random(num,1,6)
+    EnviarMensaje(num,r3)
+  fin
+  proceso cuadrado(E num: numero;ES cant:numero)
+  comenzar
+    repetir 4
+      repetir num
+        mientras HayFlorEnLaEsquina
+          tomarFlor
+          cant:= cant+1
+        mover
+      derecha
+    num:= num +1
+    Pos(PosAv,PosCa+num)
+  fin
+  proceso juntarFlores
+  comenzar
+    BloquearEsquina(50,50)
+    Pos(50,50)
+    mientras HayFlorEnLaEsquina
+      tomarFlor 
+    Pos(100,100)
+    LiberarEsquina(50,50)
+  fin
+  proceso dejarFlores(E av:numero; E ca:numero)
+  comenzar
+    mientras HayFlorEnLaBolsa
+      BloquearEsquina(50,50)
+      Pos(50,50)
+      depositarFlor
+      Pos(av,ca)
+      LiberarEsquina(50,50)
+  fin
+  proceso calcularCant(ES c1:numero;ES c2:numero;ES c3:numero)
+  variables
+    num,id,cant:numero
+  comenzar
+    Random(num,1,6)
+    RecibirMensaje(id, *)
+    si(id = 1)
+      RecibirMensaje(cant,r1)
+      c1:= cant+c1
+      EnviarMensaje(num,r1)
+    sino
+      si(id = 2)
+        RecibirMensaje(c2,r2)
+        c2:= cant+ c2
+        EnviarMensaje(num,r2)
+      sino
+        RecibirMensaje(c3,r3)
+        c3:= cant+ c3
+        EnviarMensaje(num,r3)
+  fin
+areas
+  cRec: AreaPC (1,1,26,21)
+  cCord: AreaP (100,100,100,100)
+  dep: AreaC(50,50,50,50)
+robots
+  robot recolector
+  variables
+    cant,num,id:numero
+  comenzar
+    cant:=0
+    num:=0
+    id:=0
+    RecibirMensaje(id,cord)
+    repetir 3
+      RecibirMensaje(num,cord)
+      cuadrado(num,cant)
+      dejarFlores(PosAv,PosCa)
+      EnviarMensaje(id,cord)
+      EnviarMensaje(cant,cord)
+  fin
+  robot cordinador
+  variables
+    c1,c2,c3,id:numero
+  comenzar
+    enviarMensajes
+    c1:=0
+    c2:=0
+    c3:=0
+    repetir 9
+      calcularCant(c1,c2,c3)
+      juntarFlores
+    si((c1 > c2) & (c2 > c3))
+      id:= 1
+    sino
+      si(c2 > c3)
+        id:= 2
+      sino
+        id:= 3
+    Informar('Gano el robo', id)
+  fin
+variables
+  r1: recolector
+  r2:recolector
+  r3: recolector
+  cord:cordinador
+comenzar
+  AsignarArea(r1, cRec)
+  AsignarArea(r2, cRec)
+  AsignarArea(r3, cRec)
+  AsignarArea(cord, cCord)
+  AsignarArea(r1, dep)
+  AsignarArea(r2, dep)
+  AsignarArea(r3, dep)
+  AsignarArea(cord, dep)
+  Iniciar(r1, 1,1)
+  Iniciar(r2, 10,1)
+  Iniciar(r3, 20,1)
+  Iniciar(cord, 100,100)
+fin
