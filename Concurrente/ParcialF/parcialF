@@ -1,0 +1,98 @@
+programa parcialF
+procesos
+  proceso dejarFlores(E av:numero; E ca:numero)
+  comenzar
+    mientras HayFlorEnLaBolsa
+      BloquearEsquina(20,20)
+      Pos(20,20)
+      depositarFlor
+      Pos(av,ca)
+      LiberarEsquina(20,20)
+  fin
+  proceso recorrerLado(ES cant: numero)
+  comenzar
+    repetir 9
+      mientras HayFlorEnLaEsquina
+        tomarFlor
+        cant:= cant+1
+      mover
+    derecha
+  fin
+areas
+  cA: AreaPC (1,1,11,10)
+  cB: AreaPC (13,1,23,10)
+  cF: AreaP (30,1,30,1)
+  dep: AreaPC (20,20,20,20)
+robots
+  robot robot1
+  variables
+    cant,num:numero
+  comenzar
+    RecibirMensaje(num,rF)
+    cant:=0
+    repetir 2
+      recorrerLado(cant)
+    si(num = 1)
+      EnviarMensaje(cant,r2A)
+    sino
+      EnviarMensaje(cant,r2B)
+    dejarFlores(PosAv,PosCa)
+  fin
+  robot robot2
+  variables
+    cant,num:numero
+  comenzar
+    RecibirMensaje(num,rF)
+    si(num = 2)
+      RecibirMensaje(cant,r1A)
+    sino
+      RecibirMensaje(cant,r1B)
+    repetir 2 
+      derecha
+    repetir 2
+      recorrerLado(cant)
+    dejarFlores(PosAv,PosCa)
+    EnviarMensaje(num,rF)
+    EnviarMensaje(cant,rF)
+  fin
+  robot robotF
+  variables
+    cantA,cantB,num:numero
+  comenzar
+    EnviarMensaje(1,r1A)
+    EnviarMensaje(2,r2A)
+    EnviarMensaje(3,r1B)
+    EnviarMensaje(4,r2B)
+    repetir 2
+      RecibirMensaje(num,*)
+      si(num = 2)
+        RecibirMensaje(cantA,r2A)
+      sino
+        RecibirMensaje(cantB,r2B)
+    si(cantA > cantB)
+      Informar('Gano el A con', cantA)
+    sino
+      Informar('Gano el B con', cantB)
+  fin
+variables
+  r1A: robot1
+  r1B: robot1
+  r2A: robot2
+  r2B: robot2
+  rF: robotF
+comenzar
+  AsignarArea(r1A, cA)
+  AsignarArea(r2A, cA)
+  AsignarArea(r1B, cB)
+  AsignarArea(r2B, cB)
+  AsignarArea(r1A, dep)
+  AsignarArea(r2A, dep)
+  AsignarArea(r1B, dep)
+  AsignarArea(r2B, dep)
+  AsignarArea(rF, cF)
+  Iniciar(r1A, 1,1)
+  Iniciar(r2A, 11,10)
+  Iniciar(r1B, 13,1)
+  Iniciar(r2B, 23,10)
+  Iniciar(rF, 30,1)
+fin
