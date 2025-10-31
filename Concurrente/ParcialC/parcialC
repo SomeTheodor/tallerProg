@@ -63,6 +63,8 @@ procesos
     LiberarEsquina(10,10)
   fin
   proceso contarFlores(ES cant:numero)
+  variables
+    av,ca:numero
   comenzar
     av:=PosAv
     ca:=PosCa
@@ -92,8 +94,8 @@ robots
     EnviarMensaje(3,r3)
     repetir 8
       enviarEsquina
-      enviarIntento(true)
-    enviarIntento(false)
+      enviarIntento(V)
+    enviarIntento(F)
     repetir 3
       RecibirMensaje(ok,*)
     contarFlores(cant)
@@ -105,13 +107,13 @@ robots
     intento,ok:boolean
   comenzar
     RecibirMensaje(id,rF)
-    intento:=true
-    mientras (intento = true)
+    intento:=V
+    mientras (intento = V)
       recibirEsquina(id)
       RecibirMensaje(intento,rF)
     mientras HayFlorEnLaBolsa
       dejarFlores
-    ok:=true
+    ok:=V
     EnviarMensaje(ok,rF)
   fin
 variables
