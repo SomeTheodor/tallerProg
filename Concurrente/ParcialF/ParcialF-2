@@ -1,0 +1,92 @@
+{Bienvenidos al entorno CMRE.
+Lo siguiente es un código de ejemplo que implementa un
+proceso que recibe un número de avenida como parámetro,
+se posiciona en esa avenida y la recorre.}
+
+programa parcialF
+procesos
+  proceso dejarFlores
+  variables
+    av,ca:numero
+  comenzar
+    av:= PosAv
+    ca:= PosCa
+    BloquearEsquina(10,10)
+    Pos(10,10)
+    mientras HayFlorEnLaBolsa
+      depositarFlor
+    Pos(av,ca)
+    LiberarEsquina(10,10)
+    EnviarMensaje(V,rC)
+  fin
+  proceso juntarFlores(ES cant:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      cant:= cant+1
+      si(cant = 10)
+        dejarFlores
+        cant:= 0
+  fin
+  proceso cosecharFlores(ES cant:numero)
+  comenzar
+    BloquearEsquina(10,10)
+    Pos(10,10)
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      cant:= cant+1
+    Pos(1,5)
+    LiberarEsquina(10,10)
+  fin
+areas
+  c1: AreaP (1,3,100,3)
+  c2: AreaP (1,4,100,4)
+  cC: AreaP (1,5,1,5)
+  dep: AreaC (10,10,10,10)
+robots
+  robot recolector
+  variables
+    cantF,cantE:numero
+  comenzar
+    cantF:= 0
+    cantE:= 0
+    derecha 
+    repetir 99
+      juntarFlores(cantF)
+      mover
+      cantE:= cantE + 1
+      si(cantE = 5)
+        dejarFlores
+        cantE:=0
+    dejarFlores
+    EnviarMensaje(F,rC)
+  fin
+  robot cosechador
+  variables
+    cant:numero
+    juntar:boolean
+  comenzar
+    cant:= 0
+    repetir 2
+      juntar:=V
+      mientras juntar = V
+        RecibirMensaje(juntar,*)
+        si(juntar = V)
+          cosecharFlores(cant)
+    Informar('Cant recolectada ', cant)
+  fin
+variables
+  rR1:recolector
+  rR2:recolector
+  rC:cosechador
+comenzar
+  AsignarArea(rR1, c1)
+  AsignarArea(rR2, c2)
+  AsignarArea(rC, cC)
+  AsignarArea(rR1, dep)
+  AsignarArea(rR2, dep)
+  AsignarArea(rC, dep)
+  Iniciar(rR1, 1,3)
+  Iniciar(rR2, 1,4)
+  Iniciar(rC, 1,5)
+fin
