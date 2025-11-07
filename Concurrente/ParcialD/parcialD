@@ -2,15 +2,17 @@ programa parcialD
 procesos
   proceso dejarFlores(ES cant:numero)
   comenzar
-    si~(HayFlorEnLaEsquina)
-      cant:= cant+1
-      depositarFlor
+    si(HayFlorEnLaBolsa)
+      si~(HayFlorEnLaEsquina)
+        cant:= cant+1
+        depositarFlor
   fin
   proceso dejarPapeles(ES cant:numero)
   comenzar
-    si~(HayPapelEnLaEsquina)
-      cant:= cant+1
-      depositarPapel
+    si(HayPapelEnLaBolsa)
+      si~(HayPapelEnLaEsquina)
+        cant:= cant+1
+        depositarPapel
   fin
   proceso recorrerCa(E av:numero; ES cant:numero)
   comenzar
@@ -18,11 +20,11 @@ procesos
       si((PosAv+1) = av)
         BloquearEsquina(av,PosCa+1)
         mover
-        dejarPapel(cant)
+        dejarPapeles(cant)
         mover
         LiberarEsquina(av,PosCa-1)
       sino
-        dejarPapel(cant)
+        dejarPapeles(cant)
         mover
   fin
   proceso recorrerAv(ES cant:numero)
@@ -31,18 +33,18 @@ procesos
       si(((PosCa+1) = 8))
         BloquearEsquina(PosAv+1,8)
         mover
-        dejarFlor(cant)
+        dejarFlores(cant)
         mover
         LiberarEsquina(PosAv-1,8)
       sino
         si(((PosCa+1) = 15))
           BloquearEsquina(PosAv+1,15)
           mover
-          dejarFlor(cant)
+          dejarFlores(cant)
           mover
           LiberarEsquina(PosAv-1,15)
         sino
-          dejarFlor(cant)
+          dejarFlores(cant)
           mover
   fin
 areas
@@ -56,26 +58,27 @@ areas
 robots
   robot sembrador
   variables
-    id,ca,av,cant,idF:numero
+    id,ca,av,iniCa,iniAv,cant,idF:numero
   comenzar
-    ca:= PosCa
-    av:= PosAv
+    iniCa:= PosCa
+    iniAv:= PosAv
     cant:=0
     RecibirMensaje(id,rF)
     si(id = 3)
       Random(av,2,35)
       EnviarMensaje(av,r1)
       EnviarMensaje(av,r2)
+      ca:=1
       Pos(av,ca)
       recorrerAv(cant)
     sino
       RecibirMensaje(av,r3)
       derecha
-      recorrerCa(cant)
+      recorrerCa(av,cant)
     EnviarMensaje(id,rF)
     RecibirMensaje(idF,rF)
     si(id = idF)
-      Pos(av,ca)
+      Pos(iniAv,iniCa)
       Informar('cant dejada',cant)
   fin
   robot fiscalizador
@@ -107,10 +110,12 @@ comenzar
   AsignarArea(r3,cR3Ini)
   AsignarArea(r1,cR1Fin)
   AsignarArea(r2,cR2Fin)
+  AsignarArea(r1,cPC)
+  AsignarArea(r2,cPC)
   AsignarArea(r3,cPC)
   AsignarArea(rF,cF)
   Iniciar(r1, 1,8)
-  Iniciar(r1, 1,15)
-  Iniciar(r1, 1,2)
-  Iniciar(r1, 1,1)
+  Iniciar(r2, 1,15)
+  Iniciar(r3, 2,1)
+  Iniciar(rF, 1,1)
 fin
