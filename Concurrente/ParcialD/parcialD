@@ -1,0 +1,116 @@
+programa parcialD
+procesos
+  proceso dejarFlores(ES cant:numero)
+  comenzar
+    si~(HayFlorEnLaEsquina)
+      cant:= cant+1
+      depositarFlor
+  fin
+  proceso dejarPapeles(ES cant:numero)
+  comenzar
+    si~(HayPapelEnLaEsquina)
+      cant:= cant+1
+      depositarPapel
+  fin
+  proceso recorrerCa(E av:numero; ES cant:numero)
+  comenzar
+    repetir 97
+      si((PosAv+1) = av)
+        BloquearEsquina(av,PosCa+1)
+        mover
+        dejarPapel(cant)
+        mover
+        LiberarEsquina(av,PosCa-1)
+      sino
+        dejarPapel(cant)
+        mover
+  fin
+  proceso recorrerAv(ES cant:numero)
+  comenzar
+    repetir 95
+      si(((PosCa+1) = 8))
+        BloquearEsquina(PosAv+1,8)
+        mover
+        dejarFlor(cant)
+        mover
+        LiberarEsquina(PosAv-1,8)
+      sino
+        si(((PosCa+1) = 15))
+          BloquearEsquina(PosAv+1,15)
+          mover
+          dejarFlor(cant)
+          mover
+          LiberarEsquina(PosAv-1,15)
+        sino
+          dejarFlor(cant)
+          mover
+  fin
+areas
+  cR1Ini: AreaP(1,8,1,8)
+  cR2Ini: AreaP(1,15,1,15)
+  cR1Fin: AreaP(36,8,100,8)
+  cR2Fin: AreaP(36,15,100,15)
+  cPC: AreaPC(2,1,35,100)
+  cR3Ini: AreaP(1,2,1,2)  
+  cF: AreaP (1,1,1,1)
+robots
+  robot sembrador
+  variables
+    id,ca,av,cant,idF:numero
+  comenzar
+    ca:= PosCa
+    av:= PosAv
+    cant:=0
+    RecibirMensaje(id,rF)
+    si(id = 3)
+      Random(av,2,35)
+      EnviarMensaje(av,r1)
+      EnviarMensaje(av,r2)
+      Pos(av,ca)
+      recorrerAv(cant)
+    sino
+      RecibirMensaje(av,r3)
+      derecha
+      recorrerCa(cant)
+    EnviarMensaje(id,rF)
+    RecibirMensaje(idF,rF)
+    si(id = idF)
+      Pos(av,ca)
+      Informar('cant dejada',cant)
+  fin
+  robot fiscalizador
+  variables
+    id,num:numero
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+    RecibirMensaje(id,*)
+    repetir 2
+      RecibirMensaje(num,*)
+    si(id = 1)
+      EnviarMensaje(id,r1)
+    sino
+      si(id = 2)
+        EnviarMensaje(id,r2)
+      sino
+        EnviarMensaje(id,r3)
+  fin
+variables
+  r1: sembrador
+  r2: sembrador
+  r3: sembrador
+  rF: fiscalizador
+comenzar
+  AsignarArea(r1,cR1Ini)
+  AsignarArea(r2,cR2Ini)
+  AsignarArea(r3,cR3Ini)
+  AsignarArea(r1,cR1Fin)
+  AsignarArea(r2,cR2Fin)
+  AsignarArea(r3,cPC)
+  AsignarArea(rF,cF)
+  Iniciar(r1, 1,8)
+  Iniciar(r1, 1,15)
+  Iniciar(r1, 1,2)
+  Iniciar(r1, 1,1)
+fin
