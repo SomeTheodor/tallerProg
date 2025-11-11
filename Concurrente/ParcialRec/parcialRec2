@@ -1,0 +1,152 @@
+programa parcialRec2
+procesos
+  proceso juntarFlores
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+  fin
+  proceso juntarPapeles
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+  fin
+  proceso caminar(E pasos:numero)
+  comenzar
+    repetir pasos
+      mover
+  fin
+  proceso primeraEtapa(E id:numero)
+  variables
+    ok:boolean
+    pasos:numero
+  comenzar
+    ok:=V
+    mientras (ok=V)
+      EnviarMensaje(ok,rF)
+      EnviarMensaje(id,rF)
+      RecibirMensaje(pasos,rF)
+      si(PosAv+pasos<=25)&(PosAv+pasos=>20)
+        ok:=F
+        EnviarMensaje(ok,rF)
+        EnviarMensaje(id,rF)
+        caminar(pasos)
+        juntarFlores
+        Pos(25,PosCa)
+      sino
+        caminar(pasos)
+        juntarFlores
+  fin
+  proceso segundaEtapa(E id:numero)
+  variables
+    ok:boolean
+    pasos:numero
+  comenzar
+    ok:=V
+    mientras(ok=V)
+      EnviarMensaje(ok,rF)
+      EnviarMensaje(id,rF)
+      RecibirMensaje(pasos,rF)
+      si(PosAv+pasos>=40)
+        ok:= F
+        EnviarMensaje(ok,rF)
+        EnviarMensaje(id,rF)
+        mientras(PosAv<40)
+          mover
+      sino
+        caminar(pasos)
+        juntarPapeles
+  fin
+  proceso correr(E id:numero)
+  variables
+    ok:boolean
+  comenzar
+    primeraEtapa(id)
+    RecibirMensaje(ok,rF)
+    segundaEtapa(id)
+  fin
+  proceso enviarOk
+  comenzar
+    EnviarMensaje(V,r1)
+    EnviarMensaje(V,r2)
+    EnviarMensaje(V,r3)
+    EnviarMensaje(V,r4)
+  fin
+  proceso generarPasos
+  variables
+    id,pasos,num:numero
+  comenzar
+    RecibirMensaje(id,*)
+    Random(num,1,3)
+    si(id = 1)
+      EnviarMensaje(pasos,r1)
+    sino
+      si(id = 2)
+        EnviarMensaje(pasos,r2)
+      sino
+        si(id = 3)
+          EnviarMensaje(pasos,r3)
+        sino
+          EnviarMensaje(pasos,r4)
+  fin
+  proceso verificarCorredor(ES id:numero)
+  variables
+    ok:boolean
+  comenzar
+    ok:=V
+    mientras(ok=V)
+      RecibirMensaje(ok,*)
+      si(ok = V)
+        generarPasos
+    RecibirMensaje(id,*)
+  fin
+areas
+  c1: AreaP (10,12,40,12)
+  c2: AreaP (10,10,40,10)
+  c3: AreaP (10,8,40,8)
+  c4: AreaP (10,6,40,6)
+  cF: AreaP (20,15,20,15)
+robots
+  robot corredor
+  variables
+    id:numero
+  comenzar
+    RecibirMensaje(id,rF)
+    derecha
+    correr(id)
+  fin
+  robot fiscal
+  variables
+    win1,win2,num:numero
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+    EnviarMensaje(4,r4)
+    verificarCorredor(win1)
+    repetir 3
+      verificarCorredor(num)
+    enviarOk
+    verificarCorredor(win2)
+    repetir 3
+      verificarCorredor(num)
+    Informar('Etapa1',win1) 
+    Informar('Etapa2',win2)    
+  fin
+variables
+  r1: corredor
+  r2: corredor
+  r3: corredor
+  r4: corredor
+  rF: fiscal
+comenzar
+  AsignarArea(r1, c1)
+  AsignarArea(r2, c2)
+  AsignarArea(r3, c3)
+  AsignarArea(r4, c4)
+  AsignarArea(rF, cF)
+  Iniciar(r1, 10,12)
+  Iniciar(r2, 10,10)
+  Iniciar(r3, 10,8)
+  Iniciar(r4, 10,6)
+  Iniciar(rF, 20,15)
+fin
