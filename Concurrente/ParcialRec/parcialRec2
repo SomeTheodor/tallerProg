@@ -21,20 +21,19 @@ procesos
     pasos:numero
   comenzar
     ok:=V
+    EnviarMensaje(id,rF)
     mientras (ok=V)
-      EnviarMensaje(ok,rF)
-      EnviarMensaje(id,rF)
       RecibirMensaje(pasos,rF)
       si(PosAv+pasos<=25)&(PosAv+pasos=>20)
         ok:=F
-        EnviarMensaje(ok,rF)
-        EnviarMensaje(id,rF)
         caminar(pasos)
         juntarFlores
         Pos(25,PosCa)
       sino
         caminar(pasos)
         juntarFlores
+      EnviarMensaje(ok,rF)
+      EnviarMensaje(id,rF)
   fin
   proceso segundaEtapa(E id:numero)
   variables
@@ -42,19 +41,18 @@ procesos
     pasos:numero
   comenzar
     ok:=V
+    EnviarMensaje(id,rF)
     mientras(ok=V)
-      EnviarMensaje(ok,rF)
-      EnviarMensaje(id,rF)
       RecibirMensaje(pasos,rF)
       si(PosAv+pasos>=40)
         ok:= F
-        EnviarMensaje(ok,rF)
-        EnviarMensaje(id,rF)
         mientras(PosAv<40)
           mover
       sino
         caminar(pasos)
         juntarPapeles
+      EnviarMensaje(ok,rF)
+      EnviarMensaje(id,rF)
   fin
   proceso correr(E id:numero)
   variables
@@ -73,10 +71,10 @@ procesos
   fin
   proceso generarPasos
   variables
-    id,pasos,num:numero
+    id,pasos:numero
   comenzar
     RecibirMensaje(id,*)
-    Random(num,1,3)
+    Random(pasos,1,3)
     si(id = 1)
       EnviarMensaje(pasos,r1)
     sino
@@ -92,11 +90,10 @@ procesos
   variables
     ok:boolean
   comenzar
-    ok:=V
+    RecibirMensaje(ok,*)
     mientras(ok=V)
+      generarPasos
       RecibirMensaje(ok,*)
-      si(ok = V)
-        generarPasos
     RecibirMensaje(id,*)
   fin
 areas
@@ -122,10 +119,18 @@ robots
     EnviarMensaje(2,r2)
     EnviarMensaje(3,r3)
     EnviarMensaje(4,r4)
+    mientras terminaron<4
+      recibir ok
+      recibir id
+    enviar señales
+    repetir 4
+      generarPasos
     verificarCorredor(win1)
     repetir 3
       verificarCorredor(num)
     enviarOk
+    repetir 4
+      generarPasos
     verificarCorredor(win2)
     repetir 3
       verificarCorredor(num)
